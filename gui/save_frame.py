@@ -2,6 +2,7 @@ from loguru import logger
 import tkinter as tk
 
 from myutil import global_var as gl
+from myutil.mysql_diver import mysql_diver
 
 
 class save_frame(tk.Frame):
@@ -9,7 +10,7 @@ class save_frame(tk.Frame):
         super().__init__(master=root)
 
         # 变量
-        self.sqlite = gl.get_value("sqlite")
+        self.sqlite: mysql_diver = gl.get_value("sqlite")
         self.web_var = tk.StringVar()
         self.account_var = tk.StringVar()
         self.password_var = tk.StringVar()

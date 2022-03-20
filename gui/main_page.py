@@ -7,6 +7,8 @@ from gui.main_frame import main_frame
 from gui.save_frame import save_frame
 from gui.search_frame import search_frame
 from myutil import global_var as gl
+from myutil.mysql_diver import mysql_diver
+from myutil.tools_function import resource_path
 
 
 class main_page:
@@ -15,13 +17,13 @@ class main_page:
         self.root.title("密码管理器")
         # 大小为300*300，距离屏幕左边的宽200，距离屏幕顶部的高200
         self.root.geometry("300x300+200+200")
-        self.root.iconbitmap('./resources/icon/探测声音.ico')  # 添加图标文件
+        self.root.iconbitmap(resource_path('resources/icon/探测声音.ico'))  # 添加图标文件
 
         # 初始化导航栏
         self.setup_menu_bar()
 
         # 变量
-        self.sqlite = gl.get_value("sqlite")
+        self.sqlite: mysql_diver = gl.get_value("sqlite")
         self.is_login = tk.BooleanVar()
         self.is_login.set(False)
 

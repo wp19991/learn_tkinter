@@ -4,6 +4,7 @@ from myutil.mysql_diver import mysql_diver
 from myutil import global_var as gl
 from myutil.sqlite_diver import sqlite_diver
 from myutil.ssh_diver import ssh_diver
+from myutil.tools_function import resource_path
 
 config = dict()
 config['mysql_db'] = {'host': '192.168.31.116',
@@ -13,7 +14,7 @@ config['mysql_db'] = {'host': '192.168.31.116',
                       'database': 'sys'}
 
 config['sqlite'] = {'db_file_path': 'app.db',
-                    'create_table_sql': './myutil/create_table.sql'}
+                    'create_table_sql': './resources/create_table.sql'}
 
 config['ssh'] = {'host': '192.168.31.116',
                  'port': '22',
@@ -54,7 +55,7 @@ def sqlite_connect(db_file_path, create_table_sql):
         sqlite = sqlite_diver(db_file_path)
         if not sqlite.status:
             # 如果这个数据库里面没有表，就按照sql文件创建表
-            sqlite.create_table(create_table_sql)
+            sqlite.create_table(resource_path(create_table_sql))
         gl.set_value("sqlite", sqlite)
         logger.info("sqlite连接成功")
     except:

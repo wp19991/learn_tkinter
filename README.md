@@ -39,3 +39,16 @@
 - 多用于表单的创建
 
 ![2](./doc/2.png)
+
+## 打包
+
+```bash
+# 安装打包工具
+pip install pyinstaller
+# 打包成很多文件，建议依赖非常大的时候使用
+pyinstaller learn_tkinter.spec
+
+# 打包成单独的一个exe，建议小文件使用
+# 有一个缺点，它会先读入内存，把依赖解压到缓存目录，如果应用程序大的话，建议用上面的打包成一个文件夹
+pyinstaller -F learn_tkinter_exe.spec
+```

@@ -4,6 +4,7 @@ from tkinter.ttk import Combobox
 from loguru import logger
 
 from myutil import global_var as gl
+from myutil.mysql_diver import mysql_diver
 
 
 class search_frame(tk.Frame):
@@ -11,7 +12,7 @@ class search_frame(tk.Frame):
         super().__init__(master=root)
 
         # 变量
-        self.sqlite = gl.get_value("sqlite")
+        self.sqlite: mysql_diver = gl.get_value("sqlite")
         self.web_name = self.sqlite.get_find_list("select web_name from web_password")
         self.web_combox = None
         self.web_name_var = tk.StringVar()

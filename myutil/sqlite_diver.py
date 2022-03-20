@@ -125,10 +125,10 @@ class sqlite_diver:
 
 
 if __name__ == "__main__":
-    sql = sqlite_diver("../test/test.db")
+    sql = sqlite_diver("../test/test11.db")
     if not sql.status:
         # 如果这个数据库里面没有表，就按照sql文件创建表
-        sql.create_table("./create_table.sql")
+        sql.create_table("../resources/create_table.sql")
         # 创建一个用户
         sql.add_one("user", ["user_name", "password"], ["wp", "wp123456"])
 
