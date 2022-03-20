@@ -11,12 +11,12 @@ class search_frame(tk.Frame):
         super().__init__(master=root)
 
         # 变量
-        DM = gl.get_value("DM")
-        self.web_name = DM.show_info()
+        self.sqlite = gl.get_value("sqlite")
+        self.web_name = self.sqlite.get_find_list("select web_name from web_password")
         self.web_combox = None
         self.web_name_var = tk.StringVar()
         if self.web_name:
-            self.web_name_var.set(self.web_name[0])
+            self.web_name_var.set(self.web_name[0][0])
         self.account_var = tk.StringVar()
         self.password_var = tk.StringVar()
 
@@ -53,12 +53,14 @@ class search_frame(tk.Frame):
 
     def search_info_event(self):
         logger.info("查询信息")
-        DM = gl.get_value("DM")
-        AP_result = DM.show_AP(self.web_name_var.get())
-        self.account_var.set(AP_result[0])
-        self.password_var.set(AP_result[1])
+        res = self.sqlite.get_find_list(
+            "select web_name,account,password from web_password where web_name='{}'".format(self.web_name_var.get()))
+        if res is None:
+            return
+        self.account_var.set(res[0][1])
+        self.password_var.set(res[0][2])
 
     def reload_info_event(self):
         logger.info("刷新信息")
-        DM = gl.get_value("DM")
-        self.web_combox["value"] = DM.updata_info()
+        res = self.sqlite.get_find_list("select web_name from web_password")
+        self.web_combox["value"] = [i[0] for i in res]

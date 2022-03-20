@@ -9,6 +9,7 @@ class save_frame(tk.Frame):
         super().__init__(master=root)
 
         # 变量
+        self.sqlite = gl.get_value("sqlite")
         self.web_var = tk.StringVar()
         self.account_var = tk.StringVar()
         self.password_var = tk.StringVar()
@@ -47,6 +48,8 @@ class save_frame(tk.Frame):
         web_name = self.web_var.get()
         account = self.account_var.get()
         password = self.password_var.get()
-        DM = gl.get_value("DM")
-        DM.write_data(web_name, account, password)
-        self.status_var.set("保存成功")
+        res = self.sqlite.add_one("web_password", ["web_name", "account", "password"], [web_name, account, password])
+        if res:
+            self.status_var.set("保存成功")
+        else:
+            self.status_var.set("保存失败，同网站一个账号不能有两个密码")

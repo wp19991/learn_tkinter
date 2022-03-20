@@ -1,8 +1,8 @@
 from loguru import logger
 
-from myutil.json_data_manager import json_database
 from myutil.mysql_diver import mysql_diver
 from myutil import global_var as gl
+from myutil.sqlite_diver import sqlite_diver
 from myutil.ssh_diver import ssh_diver
 
 config = dict()
@@ -11,6 +11,9 @@ config['mysql_db'] = {'host': '192.168.31.116',
                       'username': 'root',
                       'password': '123456',
                       'database': 'sys'}
+
+config['sqlite'] = {'db_file_path': 'app.db',
+                    'create_table_sql': './myutil/create_table.sql'}
 
 config['ssh'] = {'host': '192.168.31.116',
                  'port': '22',
@@ -31,6 +34,9 @@ DB_USERNAME: str = get_config("mysql_db", "username", default="root")
 DB_PASSWORD: str = get_config("mysql_db", "password", default="")
 DB_DATABASE: str = get_config("mysql_db", "database", default="sys")
 
+sqlite_db_file_path: str = get_config("sqlite", "db_file_path", default='./test/test.db')
+sqlite_create_table_sql: str = get_config("sqlite", "create_table_sql", default='./myutil/create_table.sql')
+
 SSH_HOST: str = get_config("ssh", "host", default="127.0.0.1")
 SSH_PORT: int = int(get_config("ssh", "port", default="22"))
 SSH_USERNAME: str = get_config("ssh", "username", default="root")
@@ -38,18 +44,21 @@ SSH_PASSWORD: str = get_config("ssh", "password", default="")
 
 
 def __init():
-    Database_connect("AP_DataBase.json")
+    sqlite_connect(db_file_path=sqlite_db_file_path, create_table_sql=sqlite_create_table_sql)
     # mysql_connect(host=DB_HOST, port=DB_PORT, database=DB_DATABASE, user=DB_USERNAME, password=DB_PASSWORD)
     # ssh_connect(host=SSH_HOST, port=SSH_PORT, user=SSH_USERNAME, password=SSH_PASSWORD)
 
 
-def Database_connect(file_name):
+def sqlite_connect(db_file_path, create_table_sql):
     try:
-        DM = json_database("AP_DataBase.json")
-        gl.set_value("DM", DM)
-        logger.info("Database连接成功")
+        sqlite = sqlite_diver(db_file_path)
+        if not sqlite.status:
+            # 如果这个数据库里面没有表，就按照sql文件创建表
+            sqlite.create_table(create_table_sql)
+        gl.set_value("sqlite", sqlite)
+        logger.info("sqlite连接成功")
     except:
-        logger.info("Database连接失败")
+        logger.info("sqlite连接失败")
 
 
 def mysql_connect(host, port, database, user, password):
